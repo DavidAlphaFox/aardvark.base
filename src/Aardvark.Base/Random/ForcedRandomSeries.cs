@@ -19,7 +19,7 @@ namespace Aardvark.Base
         /// Reads a file that contains a raw V2i binary array as V2i[].
         /// The binary data is supposed to contain NxN points as (int, int) in random order.
         /// </summary>
-        public static V2i[] ReadSeries(string frsSqFile)
+        public static unsafe V2i[] ReadSeries(string frsSqFile)
         {
             var bytes = File.ReadAllBytes(frsSqFile);
             var matrixSize = (int)(bytes.Length / 8).Sqrt();
@@ -28,7 +28,15 @@ namespace Aardvark.Base
             if (matrixSize * matrixSize * 8 != bytes.Length)
                 throw new InvalidDataException("Forced Random series data has invalid length.");
 
-            return bytes.UnsafeCoerce<V2i>();
+            var result = new V2i[matrixSize * matrixSize];
+            fixed (V2i* pResult = result)
+            {
+                var src = new System.Span<byte>(bytes);
+                var dst = new System.Span<byte>(pResult, result.Length * sizeof(V2i));
+                src.CopyTo(dst);
+            }
+
+            return result;
         }
 
         /// <summary>

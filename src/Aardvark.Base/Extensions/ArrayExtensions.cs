@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -2355,16 +2356,38 @@ namespace Aardvark.Base
                 return bytes;
             }
         }
-
+        
         /// <summary>
         /// Computes the MD5 hash of the data array.
         /// </summary>
         /// <returns>128bit/16byte data hash</returns>
-        public static byte[] ComputeMD5Hash(this Array data)
+        public static unsafe byte[] ComputeMD5Hash(byte* data, int length)
         {
-            byte[] hash = null;
-            data.UnsafeCoercedApply<byte>(array => hash = array.ComputeMD5Hash());
-            return hash;
+            using (var stream = new UnmanagedMemoryStream(data, length))
+            using (var md5 = SHA1.Create())
+            { 
+                var bytes = md5.ComputeHash(stream);
+                Array.Resize(ref bytes, 16);
+                return bytes;
+            }
+        }
+        
+        /// <summary>
+        /// Computes the MD5 hash of the data array.
+        /// </summary>
+        /// <returns>128bit/16byte data hash</returns>
+        public static unsafe byte[] ComputeMD5Hash(this Array data)
+        {
+            Type el = data.GetType().GetElementType();
+            var gc = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return ComputeMD5Hash((byte*)gc.AddrOfPinnedObject(), Marshal.SizeOf(el) * data.Length);
+            }
+            finally
+            {
+                gc.Free();
+            }
         }
 
         /// <summary>
@@ -2385,16 +2408,34 @@ namespace Aardvark.Base
             using (var sha1 = SHA1.Create())
                 return sha1.ComputeHash(data);
         }
+        
+        /// <summary>
+        /// Computes the SHA1 hash of the data array.
+        /// </summary>
+        /// <returns>160bit/20byte data hash</returns>
+        public static unsafe byte[] ComputeSHA1Hash(byte* data, int length)
+        {
+            using(var stream = new UnmanagedMemoryStream(data, length))
+            using (var sha1 = SHA1.Create())
+                return sha1.ComputeHash(stream);
+        }
 
         /// <summary>
         /// Computes the SHA1 hash of the data array.
         /// </summary>
         /// <returns>160bit/20byte data hash</returns>
-        public static byte[] ComputeSHA1Hash(this Array data)
+        public static unsafe byte[] ComputeSHA1Hash(this Array data)
         {
-            byte[] hash = null;
-            data.UnsafeCoercedApply<byte>(array => hash = array.ComputeSHA1Hash());
-            return hash;
+            Type el = data.GetType().GetElementType();
+            var gc = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return ComputeSHA1Hash((byte*)gc.AddrOfPinnedObject(), Marshal.SizeOf(el) * data.Length);
+            }
+            finally
+            {
+                gc.Free();
+            }
         }
 
         /// <summary>
@@ -2420,11 +2461,29 @@ namespace Aardvark.Base
         /// Computes the SHA256 hash of the data array.
         /// </summary>
         /// <returns>256bit/32byte data hash</returns>
-        public static byte[] ComputeSHA256Hash(this Array data)
+        public static unsafe byte[] ComputeSHA256Hash(byte* data, int length)
         {
-            byte[] hash = null;
-            data.UnsafeCoercedApply<byte>(array => hash = array.ComputeSHA256Hash());
-            return hash;
+            using (var stream = new UnmanagedMemoryStream(data, length))
+            using (var sha256 = SHA256.Create())
+                return sha256.ComputeHash(stream);
+        }
+        
+        /// <summary>
+        /// Computes the SHA256 hash of the data array.
+        /// </summary>
+        /// <returns>256bit/32byte data hash</returns>
+        public static unsafe byte[] ComputeSHA256Hash(this Array data)
+        {
+            Type el = data.GetType().GetElementType();
+            var gc = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return ComputeSHA256Hash((byte*)gc.AddrOfPinnedObject(), Marshal.SizeOf(el) * data.Length);
+            }
+            finally
+            {
+                gc.Free();
+            }
         }
 
         /// <summary>
@@ -2446,15 +2505,30 @@ namespace Aardvark.Base
                 return sha512.ComputeHash(data);
         }
 
+        
+        public static unsafe byte[] ComputeSHA512Hash(byte* data, int length)
+        {
+            using (var stream = new UnmanagedMemoryStream(data, length))
+            using (var sha512 = SHA512.Create())
+                return sha512.ComputeHash(stream);
+        }
+        
         /// <summary>
         /// Computes the SHA512 hash of the data array.
         /// </summary>
         /// <returns>512bit/64byte data hash</returns>
-        public static byte[] ComputeSHA512Hash(this Array data)
+        public static unsafe byte[] ComputeSHA512Hash(this Array data)
         {
-            byte[] hash = null;
-            data.UnsafeCoercedApply<byte>(array => hash = array.ComputeSHA512Hash());
-            return hash;
+            Type el = data.GetType().GetElementType();
+            var gc = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return ComputeSHA512Hash((byte*)gc.AddrOfPinnedObject(), Marshal.SizeOf(el) * data.Length);
+            }
+            finally
+            {
+                gc.Free();
+            }
         }
 
         /// <summary>
@@ -2476,14 +2550,32 @@ namespace Aardvark.Base
             return a.Checksum;
         }
 
+        
+        public static unsafe uint ComputeAdler32Checksum(byte* data, int length)
+        {
+            var a = new Adler32();
+            using (var stream = new UnmanagedMemoryStream(data, length))
+            {
+                a.Update(stream);
+                return a.Checksum;       
+            }
+        }
+        
         /// <summary>
         /// Computes a checksum of the data array using the Adler-32 algorithm (<see cref="Adler32"/>).
         /// </summary>
-        public static uint ComputeAdler32Checksum(this Array data)
+        public static unsafe uint ComputeAdler32Checksum(this Array data)
         {
-            var a = new Adler32();
-            data.UnsafeCoercedApply<byte>(array => a.Update(array));
-            return a.Checksum;            
+            Type el = data.GetType().GetElementType();
+            var gc = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                return ComputeAdler32Checksum((byte*)gc.AddrOfPinnedObject(), Marshal.SizeOf(el) * data.Length);
+            }
+            finally
+            {
+                gc.Free();
+            }        
         }
 
         /// <summary>
