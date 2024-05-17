@@ -15,23 +15,31 @@
     <OutputPath>..\..\bin\Release</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Prelude\Logging.fs" />
-    <Compile Include="Prelude\FSLibExtensions.fs" />
-    <Compile Include="Prelude\Math.fs" />
-    <Compile Include="Prelude\Measures.fs" />
-    <Compile Include="Prelude\Lens.fs" />
-    <Compile Include="Prelude\Monoid.fs" />
-    <Compile Include="Prelude\AverageWindow.fs" />
-    <Compile Include="Interop\Converters.fs" />
-    <Compile Include="Interop\Dictionary.fs" />
-    <Compile Include="Interop\Symbol.fs" />
-    <Compile Include="Interop\Vectors.fs" />
-    <Compile Include="Interop\Matrix.fs" />
-    <Compile Include="Interop\String.fs" />
-    <Compile Include="Interop\SortedSet.fs" />
-    <Compile Include="Interop\HashSet.fs" />
-    <Compile Include="Interop\CSharpList.fs" />
-    <Compile Include="Interop\ArraySegment.fs" />
+    <Compile Include="Utilities\Logging.fs" />
+    <Compile Include="Utilities\Interop\FSLibExtensions.fs" />
+    <Compile Include="Utilities\Interop\Dictionary.fs" />
+    <Compile Include="Utilities\Interop\Symbol.fs" />
+    <Compile Include="Utilities\Interop\String.fs" />
+    <Compile Include="Utilities\Interop\SortedSet.fs" />
+    <Compile Include="Utilities\Interop\HashSet.fs" />
+    <Compile Include="Utilities\Interop\CSharpList.fs" />
+    <Compile Include="Utilities\Interop\ArraySegment.fs" />
+    <Compile Include="Utilities\Pickler\FsPicklerExtensions.fs" />
+    <Compile Include="Utilities\Pickler\AdaptivePicklers.fs" />
+    <Compile Include="Utilities\Threading.fs" />
+    <Compile Include="Utilities\IO.fs" />
+    <Compile Include="Utilities\Native.fs" />
+    <Compile Include="Utilities\Measures.fs" />
+    <Compile Include="Utilities\Lens.fs" />
+    <Compile Include="Utilities\Monoid.fs" />
+    <Compile Include="Utilities\Monads.fs" />
+    <Compile Include="Utilities\Weak.fs" />
+    <Compile Include="Math\Math.fs" />
+    <Compile Include="Math\Vectors.fs" />
+    <Compile Include="Math\Matrix.fs" />
+    <Compile Include="Math\SVDM33f.fs" />
+    <Compile Include="Math\AverageWindow.fs" />
+    <Compile Include="Math\Converters.fs" />
     <Compile Include="Datastructures\Mutable\FixedSizeArray.fs" />
     <Compile Include="Datastructures\Mutable\Order.fs" />
     <Compile Include="Datastructures\Mutable\OrderMaintenance.fs" />
@@ -43,6 +51,8 @@
     <Compile Include="Datastructures\Mutable\ReferenceCountingSet.fs" />
     <Compile Include="Datastructures\Immutable\MapExt.fs" />
     <Compile Include="Datastructures\Immutable\FingerTree.fs" />
+    <None Include="Datastructures\Immutable\RangeSetOld_template.fs" />
+    <Compile Include="Datastructures\Immutable\RangeSetOld_auto.fs" />
     <None Include="Datastructures\Immutable\RangeSet_template.fs" />
     <Compile Include="Datastructures\Immutable\RangeSet_auto.fs" />
     <Compile Include="Datastructures\Immutable\Graph.fs" />
@@ -50,6 +60,9 @@
     <Compile Include="Datastructures\Geometry\KdTree.fs" />
     <Compile Include="Datastructures\Geometry\Bvh.fs" />
     <Compile Include="Algorithms\PolygonSimplification.fs" />
+    <Compile Include="Color\ColorBrewer.fs" />
+    <Compile Include="Color\ColorBrewerSchemes.fs" />
+    <None Include="color\ColorBrewerSchemes.fsx" />
     <Compile Include="Reflection\TypeInfo.fs" />
     <Compile Include="Reflection\FunctionReflection.fs" />
     <Compile Include="Reflection\Formatf.fs" />
@@ -67,20 +80,14 @@
     <Compile Include="Runtime\Fragments.fs" />
     <Compile Include="Runtime\CustomSchedulers.fs" />
     <Compile Include="Runtime\Caches.fs" />
-    <Compile Include="SVDM33f.fs" />
-    <Compile Include="String.fs" />
-    <Compile Include="Runtime.fs" />
-    <Compile Include="Control.fs" />
-    <Compile Include="FsPicklerExtensions.fs" />
-    <Compile Include="AdaptivePicklers.fs" />
-    <Compile Include="Ag.fs" />
-    <None Include="paket.references" />
     <Compile Include="Native\BlobStore.fs" />
     <Compile Include="Native\Pointer.fs" />
     <Compile Include="Native\Memory.fs" />
     <Compile Include="Native\FileTable.fs" />
     <Compile Include="Native\Manager.fs" />
     <Compile Include="Native\Store.fs" />
+    <Compile Include="Ag.fs" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aardvark.Base\Aardvark.Base.csproj" />

@@ -1,5 +1,29 @@
+### 5.2.29
+* Fixed color parsing to be independent of the current culture (regression in 5.2.27)
+* Added more value variants for Dictionary, Dict, and SymbolDict functions
+
+### 5.2.28
+* Added Brewer color schemes
+* Added String.replace
+* Added IDictionary.TryPop overload with output argument
+
+### 5.2.27
+* Improved and fixed RangeSet implementation
+* Added utilities for ValueOption
+* Added more ArraySegment utilities
+* [Text] Fixed NestedBracketSplitCount
+* [Color] Fixed overflow issue in C4ui constructors
+* [Color] Improved color parsing, now supports hexadecimal color strings
+* [PixImage] Fixed file handle leak in Windows Media loader
+* [MapExt] Added value variants of some operations
+
 ### 5.2.26
 * LinearRegression3d: made fields public
+* Added getLines, normalizeLineEndings, withLineNumbers in String module
+* Fixed FGetValueOrDefault dictionary extension
+* Added value variants for Dict functions
+* Added F# ArraySegment utilities
+* [Introspection] Tidied up exception reporting
 
 ### 5.2.25
 * Fixed issue with PixImageMipMap loading
